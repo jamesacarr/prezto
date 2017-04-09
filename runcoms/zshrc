@@ -2,7 +2,7 @@
 # Executes commands at the start of an interactive session.
 #
 # Authors:
-#   Sorin Ionescu <sorin.ionescu@gmail.com>
+#   James Carr <james@jamescarr.dev>
 #
 
 # Source Prezto.
@@ -10,4 +10,23 @@ if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
   source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
 fi
 
-# Customize to your needs...
+# Source config files
+for file in "${ZDOTDIR:-$HOME}/.zprezto/system/"*; do
+  source "$file"
+done
+
+# Source autojump
+[[ -s $(brew --prefix)/etc/profile.d/autojump.sh ]] && . $(brew --prefix)/etc/profile.d/autojump.sh
+
+# Source local configs
+EXTRA_DIR="$HOME/.extra/runcom"
+if [ -d "$EXTRA_DIR" ]; then
+  for file in "${EXTRA_DIR}/"*; do
+    source "$file"
+  done
+fi
+unset EXTRA_DIR
+
+if command -v direnv 1>/dev/null 2>&1; then
+  eval "$(direnv hook zsh)"
+fi
